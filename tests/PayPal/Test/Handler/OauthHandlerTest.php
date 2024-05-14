@@ -3,6 +3,7 @@
 namespace PayPal\Test\Handler;
 
 use PayPal\Auth\OAuthTokenCredential;
+use PayPal\Cache\AuthorizationCache;
 use PayPal\Core\PayPalHttpConfig;
 use PayPal\Handler\OauthHandler;
 use PayPal\Rest\ApiContext;
@@ -31,7 +32,7 @@ class OauthHandlerTest extends TestCase
      */
     public $config;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->apiContext = new ApiContext(
             new OAuthTokenCredential(
@@ -39,6 +40,10 @@ class OauthHandlerTest extends TestCase
                 'clientSecret'
             )
         );
+        $this->config = [
+            'clientId' => 'clientId',
+            'clientSecret' => 'clientSecret',
+        ];
     }
 
     public function modeProvider()
@@ -58,10 +63,13 @@ class OauthHandlerTest extends TestCase
      */
     public function testGetEndpoint($configs)
     {
+        $this->expectNotToPerformAssertions();
+
         $config = $configs + array(
             'cache.enabled' => true,
             'http.headers.header1' => 'header1value'
         );
+
         $this->apiContext->setConfig($config);
         $this->httpConfig = new PayPalHttpConfig(null, 'POST', $config);
         $this->handler = new OauthHandler($this->apiContext);

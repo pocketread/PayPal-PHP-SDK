@@ -22,7 +22,7 @@ class WebhookEventTest extends TestCase
      */
     public static function getJson()
     {
-        return '{"id":"TestSample","create_time":"TestSample","resource_type":"TestSample","event_version":"TestSample","event_type":"TestSample","summary":"TestSample","resource":"TestSampleObject","status":"TestSample","transmissions":"TestSampleObject","links":' .LinksTest::getJson() . '}';
+        return '{"id":"TestSample","create_time":"TestSample","resource_type":"TestSample","event_version":"TestSample","event_type":"TestSample","summary":"TestSample","resource":"TestSampleObject","links":' .LinksTest::getJson() . '}';
     }
 
     /**
@@ -50,8 +50,6 @@ class WebhookEventTest extends TestCase
         $this->assertNotNull($obj->getEventType());
         $this->assertNotNull($obj->getSummary());
         $this->assertNotNull($obj->getResource());
-        $this->assertNotNull($obj->getStatus());
-        $this->assertNotNull($obj->getTransmissions());
         $this->assertNotNull($obj->getLinks());
         $this->assertEquals(self::getJson(), $obj->toJson());
         return $obj;
@@ -70,8 +68,6 @@ class WebhookEventTest extends TestCase
         $this->assertEquals($obj->getEventType(), "TestSample");
         $this->assertEquals($obj->getSummary(), "TestSample");
         $this->assertEquals($obj->getResource(), "TestSampleObject");
-        $this->assertEquals($obj->getStatus(), "TestSample");
-        $this->assertEquals($obj->getTransmissions(), "TestSampleObject");
         $this->assertEquals($obj->getLinks(), LinksTest::getObject());
     }
 
@@ -109,9 +105,8 @@ class WebhookEventTest extends TestCase
             ->will($this->returnValue(
                     self::getJson()
             ));
-        $eventResend = EventResendTest::getObject();
 
-        $result = $obj->resend($eventResend, $mockApiContext, $mockPPRestCall);
+        $result = $obj->resend($mockApiContext, $mockPPRestCall);
         $this->assertNotNull($result);
     }
     /**
